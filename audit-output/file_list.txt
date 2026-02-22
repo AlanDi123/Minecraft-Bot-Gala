@@ -1,0 +1,6 @@
+.gitignore
+CRAFTING_COMPLETO_V6.md
+README_V6.md
+gala_ai_v6.js
+package-lock.json
+package.json

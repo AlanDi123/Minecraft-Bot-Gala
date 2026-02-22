@@ -1,14 +1,18 @@
 {
   "name": "gala-ai-v6",
-  "version": "6.0.0",
-  "description": "GALA AI V6.0 OMEGA - Autonomous Minecraft Bot - Completista (100% Game Completion)",
+  "version": "6.1.0",
+  "description": "GALA AI V6.1 OMEGA - Autonomous Minecraft Bot - Modular Architecture",
   "type": "module",
-  "main": "gala_ai_v6.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node --max-old-space-size=12288 gala_ai_v6.js",
-    "start-v5": "node --max-old-space-size=4096 gala_ai_v5.js",
-    "start-debug": "node --max-old-space-size=12288 --expose-gc gala_ai_v6.js",
-    "clean": "rm -f gala_v6_logs.txt gala_metrics_v6.json gala_knowledge_v6.json gala_state_v6.json",
+    "start": "node --max-old-space-size=12288 src/index.js",
+    "start-debug": "node --max-old-space-size=12288 --expose-gc src/index.js",
+    "start-legacy": "node --max-old-space-size=4096 gala_ai_v6.js",
+    "lint": "eslint src/ --fix",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "audit": "npm audit --json > audit-output/npm_audit.json",
+    "clean": "rm -f gala_v6_logs.txt gala_metrics_v6.json gala_state_v6.json gala_knowledge_v6.json",
     "clean-all": "rm -f gala_v*_logs.txt gala_metrics_v*.json gala_knowledge_v*.json gala_state_v*.json"
   },
   "engines": {
@@ -22,7 +26,8 @@
     "autonomous",
     "self-healing",
     "completista",
-    "ender-dragon"
+    "ender-dragon",
+    "modular"
   ],
   "author": "Gala AI Development Team",
   "license": "MIT",
@@ -33,10 +38,17 @@
     "mineflayer-collectblock": "^1.6.0",
     "mineflayer-pathfinder": "^2.4.5",
     "mineflayer-pvp": "^1.3.2",
+    "pino": "^9.6.0",
     "vec3": "^0.1.10"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "jest": "^29.7.0"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/AlanDi123/Minecraft-Bot-Gala.git"
   }
 }

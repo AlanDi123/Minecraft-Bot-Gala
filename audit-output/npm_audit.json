@@ -1,0 +1,168 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@xboxreplay/xboxlive-auth": {
+      "name": "@xboxreplay/xboxlive-auth",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "axios"
+      ],
+      "effects": [
+        "prismarine-auth"
+      ],
+      "range": "3.0.1 - 4.0.0",
+      "nodes": [
+        "node_modules/@xboxreplay/xboxlive-auth"
+      ],
+      "fixAvailable": {
+        "name": "mineflayer",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "axios": {
+      "name": "axios",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1097679,
+          "name": "axios",
+          "dependency": "axios",
+          "title": "Axios Cross-Site Request Forgery Vulnerability",
+          "url": "https://github.com/advisories/GHSA-wf5p-g6vw-rhxx",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-352"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=0.8.1 <0.28.0"
+        },
+        {
+          "source": 1111034,
+          "name": "axios",
+          "dependency": "axios",
+          "title": "axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL",
+          "url": "https://github.com/advisories/GHSA-jr5f-v2jv-69x6",
+          "severity": "high",
+          "cwe": [
+            "CWE-918"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<0.30.0"
+        },
+        {
+          "source": 1113274,
+          "name": "axios",
+          "dependency": "axios",
+          "title": "Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig",
+          "url": "https://github.com/advisories/GHSA-43fc-jf86-j433",
+          "severity": "high",
+          "cwe": [
+            "CWE-754"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=0.30.2"
+        }
+      ],
+      "effects": [
+        "@xboxreplay/xboxlive-auth"
+      ],
+      "range": "<=0.30.2",
+      "nodes": [
+        "node_modules/axios"
+      ],
+      "fixAvailable": {
+        "name": "mineflayer",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "minecraft-protocol": {
+      "name": "minecraft-protocol",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "prismarine-auth"
+      ],
+      "effects": [
+        "mineflayer"
+      ],
+      "range": "1.26.0 || >=1.27.0",
+      "nodes": [
+        "node_modules/minecraft-protocol"
+      ],
+      "fixAvailable": {
+        "name": "mineflayer",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "mineflayer": {
+      "name": "mineflayer",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "minecraft-protocol"
+      ],
+      "effects": [],
+      "range": ">=4.1.0",
+      "nodes": [
+        "node_modules/mineflayer"
+      ],
+      "fixAvailable": {
+        "name": "mineflayer",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "prismarine-auth": {
+      "name": "prismarine-auth",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@xboxreplay/xboxlive-auth"
+      ],
+      "effects": [
+        "minecraft-protocol"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/prismarine-auth"
+      ],
+      "fixAvailable": {
+        "name": "mineflayer",
+        "version": "4.0.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 5,
+      "critical": 0,
+      "total": 5
+    },
+    "dependencies": {
+      "prod": 104,
+      "dev": 0,
+      "optional": 2,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 105
+    }
+  }
+}
