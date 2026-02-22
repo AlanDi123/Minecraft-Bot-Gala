@@ -1,19 +1,30 @@
 {
   "name": "gala-ai-v6",
-  "version": "6.1.0",
-  "description": "GALA AI V6.1 OMEGA - Autonomous Minecraft Bot - Modular Architecture",
+  "version": "6.2.0",
+  "description": "GALA AI V6.2 OMEGA - Autonomous Minecraft Bot - Production Ready",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
     "start": "node --max-old-space-size=12288 src/index.js",
     "start-debug": "node --max-old-space-size=12288 --expose-gc src/index.js",
     "start-legacy": "node --max-old-space-size=4096 gala_ai_v6.js",
-    "lint": "eslint src/ --fix",
+    "lint": "eslint src/ tests/ --fix",
+    "lint:check": "eslint src/ tests/",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit/",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/integration/",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "audit": "npm audit --json > audit-output/npm_audit.json",
+    "audit:fix": "npm audit fix",
     "clean": "rm -f gala_v6_logs.txt gala_metrics_v6.json gala_state_v6.json gala_knowledge_v6.json",
-    "clean-all": "rm -f gala_v*_logs.txt gala_metrics_v*.json gala_knowledge_v*.json gala_state_v*.json"
+    "clean-all": "rm -f gala_v*_logs.txt gala_metrics_v*.json gala_knowledge_v*.json gala_state_v*.json",
+    "docker:build": "docker build -t gala-bot:v6.2 .",
+    "docker:run": "docker run -d --name gala-bot gala-bot:v6.2",
+    "docker:stop": "docker stop gala-bot && docker rm gala-bot",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -27,7 +38,8 @@
     "self-healing",
     "completista",
     "ender-dragon",
-    "modular"
+    "modular",
+    "production"
   ],
   "author": "Gala AI Development Team",
   "license": "MIT",
@@ -45,10 +57,17 @@
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "jest": "^29.7.0"
+    "husky": "^9.0.11",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/AlanDi123/Minecraft-Bot-Gala.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/AlanDi123/Minecraft-Bot-Gala/issues"
+  },
+  "homepage": "https://github.com/AlanDi123/Minecraft-Bot-Gala#readme"
 }
