@@ -1,0 +1,23 @@
+# Archivos generados dinámicamente (no commitear)
+gala_v6_logs.txt
+gala_metrics_v6.json
+gala_state_v6.json
+gala_state_v6_backup.json
+gala_knowledge_v6.json
+
+# Dependencias
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Temporales
+*.tmp
+*.bak
