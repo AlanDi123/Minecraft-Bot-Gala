@@ -3,8 +3,11 @@
  * @module plugins/pathfinder
  */
 
-import { pathfinder as pathfinderPlugin, Movements, goals: Goals } from 'mineflayer-pathfinder';
+import pathfinderPkg from 'mineflayer-pathfinder';
 import structuredLogger from '../utils/logger.js';
+
+const { pathfinder: pathfinderPlugin, Movements } = pathfinderPkg;
+const Goals = pathfinderPkg.goals || pathfinderPkg.Goals;
 
 export class PathfinderWrapper {
     constructor() {
@@ -40,18 +43,20 @@ export class PathfinderWrapper {
         this.movements.dontMineUnderFallingBlock = true;
         
         this.bot.pathfinder.setMovements(this.movements);
-        
+
         structuredLogger.info('Pathfinder inicializado', {
             cacheSize: 2000,
             defaultTimeout: this.defaultTimeout
         });
-        
-        // Evento de goal alcanzado
-        this.bot.pathfinder.on('goal_reached', () => {
-            this.stats.goalsReached++;
-            structuredLogger.debug('Goal alcanzado', { total: this.stats.goalsReached });
+
+        // Evento de goal alcanzado (usando bot.on en lugar de pathfinder.on)
+        this.bot.on('path_update', (result) => {
+            if (result.status === 'success') {
+                this.stats.goalsReached++;
+                structuredLogger.debug('Goal alcanzado', { total: this.stats.goalsReached });
+            }
         });
-        
+
         return this;
     }
     

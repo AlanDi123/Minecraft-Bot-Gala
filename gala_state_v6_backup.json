@@ -1,0 +1,27 @@
+{
+  "botId": null,
+  "position": {
+    "x": 67.5,
+    "y": 143,
+    "z": -54.5
+  },
+  "dimension": "minecraft:overworld",
+  "currentTask": "CRAFT_PICKAXE",
+  "currentGoal": null,
+  "inventory": {},
+  "health": 19.16666603088379,
+  "food": 20,
+  "equipment": {},
+  "waypoints": [],
+  "completedPhases": [],
+  "deaths": 17,
+  "lastDeathLocation": {
+    "x": 51.55835240054887,
+    "y": 108,
+    "z": -64.37589420703004,
+    "cause": "unknown",
+    "timestamp": 1771951751521
+  },
+  "sessionStartTime": 1771806247175,
+  "lastSaveTime": 1771975210531
+}
