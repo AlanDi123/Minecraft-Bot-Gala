@@ -4,9 +4,9 @@
  * @module ml/autonomous-learner
  */
 
-import QLearning from './q-learning.js';
-import RewardSystem from './reward-system.js';
-import BotMemory from './memory.js';
+import { QLearning } from './q-learning.js';
+import { RewardSystem } from './reward-system.js';
+import { BotMemory } from './memory.js';
 import structuredLogger from '../utils/logger.js';
 
 /**

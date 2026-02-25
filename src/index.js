@@ -9,7 +9,7 @@
 // Imports principales
 import structuredLogger from './utils/logger.js';
 import StateManager from './utils/state-manager.js';
-import createBot from './connect/createBot.js';
+import { reconnectWithBackoff, createBot } from './connect/createBot.js';
 import CONFIG from './config/index.js';
 
 // Plugin wrappers
@@ -85,7 +85,13 @@ class GalaBot {
         structuredLogger.success('State Manager inicializado');
 
         // Crear bot
-        this.bot = await createBot();
+        this.bot = await reconnectWithBackoff(createBot, {
+            host: CONFIG.server.host,
+            port: CONFIG.server.port,
+            username: CONFIG.server.username,
+            version: CONFIG.server.version,
+            auth: CONFIG.server.auth
+        });
         this.isConnected = true;
 
         // Cargar minecraft-data
@@ -202,6 +208,28 @@ class GalaBot {
             this.isConnected = false;
             this.stateManager.stopAutoSave();
             this.stateManager.save();
+        });
+        
+        // Evento: Expulsado (kicked)
+        this.bot.on('kicked', async (reason) => {
+            structuredLogger.warn('Bot expulsado del servidor', { reason });
+            this.isConnected = false;
+            await this.stop();
+            await new Promise(r => setTimeout(r, 5000)); // Esperar 5s
+            try {
+                this.bot = await reconnectWithBackoff(createBot, {
+                    host: CONFIG.server.host,
+                    port: CONFIG.server.port,
+                    username: CONFIG.server.username,
+                    version: CONFIG.server.version,
+                    auth: CONFIG.server.auth
+                });
+                this.isConnected = true;
+                this.initializePlugins();
+                this.setupEvents();
+            } catch (err) {
+                structuredLogger.error('No se pudo reconectar tras expulsión', { error: err.message });
+            }
         });
         
         // Evento: Error
@@ -864,7 +892,31 @@ class GalaBot {
     }
 
     async gatherFood() {
-        // Buscar y recolectar comida
+        // 1. Buscar animales para cazar (vaca, cerdo, pollo, oveja)
+        const meatAnimals = ['cow', 'pig', 'chicken', 'sheep'];
+        for (const mobName of meatAnimals) {
+            const mob = this.bot.nearestEntity(e => e.name === mobName &&
+                e.position.distanceTo(this.bot.entity.position) < 32);
+            if (mob) {
+                structuredLogger.info(`🥩 Cazando ${mobName} para comida`);
+                try {
+                    await this.pathfinder.goTo(
+                        mob.position.x,
+                        mob.position.y,
+                        mob.position.z,
+                        { timeout: 15000, range: 3 }
+                    );
+                    if (this.pvp) {
+                        await this.pvp.engageCombat(mob);
+                    }
+                    return;
+                } catch (err) {
+                    structuredLogger.warn(`No se pudo cazar ${mobName}`, { error: err.message });
+                }
+            }
+        }
+
+        // 2. Buscar bloques de comida (cultivos)
         const foodBlocks = ['wheat', 'carrots', 'potatoes', 'beetroots'];
         for (const food of foodBlocks) {
             const block = this.bot.findBlock({
@@ -1878,6 +1930,31 @@ class GalaBot {
     }
 
     /**
+     * Obtener nombre del bioma actual
+     */
+    getBiomeName() {
+        try {
+            const pos = this.bot.entity.position;
+            const chunk = this.bot.world.getColumn(
+                Math.floor(pos.x / 16),
+                Math.floor(pos.z / 16)
+            );
+            if (chunk) {
+                const biomeId = chunk.getBiome(
+                    Math.floor(pos.x) & 0xf,
+                    Math.floor(pos.y),
+                    Math.floor(pos.z) & 0xf
+                );
+                const biome = this.mcData?.biomes?.[biomeId];
+                return biome?.name || 'unknown';
+            }
+        } catch (_err) {
+            // Fallback silencioso
+        }
+        return 'unknown';
+    }
+
+    /**
      * Obtener estado actual del bot para ML
      */
     getBotState() {
@@ -1919,7 +1996,7 @@ class GalaBot {
             hasFurnace: (inventory['furnace'] || 0) > 0,
             nearbyHostiles: this.getNearbyHostiles(16).length,
             isNight: time >= 13000 || time <= 1000,
-            biome: 'unknown', // Se puede obtener del bot
+            biome: this.getBiomeName(),
             position,
             inventory
         };
@@ -1942,6 +2019,11 @@ class GalaBot {
             y: pos.y,
             z: pos.z
         });
+        
+        // Actualizar salud, comida e inventario en el estado
+        this.stateManager.set('health', this.bot.health);
+        this.stateManager.set('food', this.bot.food);
+        this.stateManager.updateInventory(this.getInventorySummary());
         
         // 🧠 ML: Auto-guardado periódico
         if (this.mlLearner) {
