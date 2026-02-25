@@ -22,6 +22,15 @@ import InventoryCraftingWrapper from './plugins/inventory-crafting.js';
 // Machine Learning
 import { AutonomousLearner } from './ml/autonomous-learner.js';
 
+// 🤖 AI Systems
+import HierarchicalPlanner from './ai/HierarchicalPlanner.js';
+import EnvironmentScanner from './ai/EnvironmentScanner.js';
+import SurvivalManager from './ai/SurvivalManager.js';
+import CraftingPlanner from './ai/CraftingPlanner.js';
+import LearningMemorySystem from './ai/LearningMemorySystem.js';
+import AdaptiveBehaviorEngine from './ai/AdaptiveBehaviorEngine.js';
+import WorldExplorer from './ai/WorldExplorer.js';
+
 // 🧠 Conocimiento de Minecraft (TODOS los crafteos 1.20.1)
 import { 
     CRAFTING_RECIPES, 
@@ -47,6 +56,15 @@ class GalaBot {
         this.autoEat = null;
         this.mlLearner = null; // 🧠 Sistema de ML
         this.craftingKnowledge = null; // 🧠 Base de conocimiento de crafteos
+        
+        // 🤖 AI Systems
+        this.planner = null;
+        this.scanner = null;
+        this.survivalAI = null;
+        this.craftingAI = null;
+        this.memorySystem = null;
+        this.adaptiveBehavior = null;
+        this.worldExplorer = null;
 
         this.isRunning = false;
         this.isConnected = false;
@@ -152,7 +170,35 @@ class GalaBot {
             trainingMode: true
         });
         structuredLogger.success('🧠 Sistema de ML inicializado');
-    }
+
+        // 🤖 Inicializar sistemas de IA
+        this.memorySystem = new LearningMemorySystem({
+            episodicFile: CONFIG.learning.episodicMemoryFile,
+            resourceMapFile: CONFIG.learning.resourceMapFile
+        });
+        this.planner = new HierarchicalPlanner(this.craftingKnowledge);
+        this.scanner = new EnvironmentScanner();
+        this.survivalAI = new SurvivalManager({ fleeHealthThreshold: CONFIG.survival.fleeHealthThreshold });
+        this.craftingAI = new CraftingPlanner(this.craftingKnowledge);
+        this.worldExplorer = new WorldExplorer({ exploredChunksFile: CONFIG.learning.exploredChunksFile });
+        this.adaptiveBehavior = new AdaptiveBehaviorEngine({
+            bot: this.bot,
+            mlLearner: this.mlLearner,
+            planner: this.planner,
+            scanner: this.scanner,
+            survivalManager: this.survivalAI,
+            craftingPlanner: this.craftingAI,
+            memorySystem: this.memorySystem,
+            worldExplorer: this.worldExplorer,
+            pathfinder: this.pathfinder,
+            pvp: this.pvp,
+            collectBlock: this.collectBlock,
+            stateManager: this.stateManager,
+            getBotState: () => this.getBotState()
+        });
+        await this.memorySystem.load();
+        await this.worldExplorer.load();
+        structuredLogger.success('🤖 Sistemas de IA inicializados');
     
     /**
      * Configurar eventos del bot
@@ -191,6 +237,12 @@ class GalaBot {
                 );
             }
             
+            // 🤖 AI: Manejar muerte
+            if (this.adaptiveBehavior) {
+                this.adaptiveBehavior.stop();
+                this.adaptiveBehavior.handleDeath().catch(() => {});
+            }
+            
             this.pvp.stop();
             this.collectBlock.stop();
         });
@@ -199,6 +251,10 @@ class GalaBot {
         this.bot.on('respawn', () => {
             structuredLogger.info('✨ Respawn completado');
             this.stateManager.reset();
+            // 🤖 AI: Reanudar tras respawn
+            if (this.adaptiveBehavior) {
+                this.adaptiveBehavior.start().catch(() => {});
+            }
         });
         
         // Evento: Desconexión
@@ -278,6 +334,12 @@ class GalaBot {
         }, CONFIG.memory.backupInterval);
         
         structuredLogger.success('Sistemas de loop iniciados');
+
+        // 🤖 AI: Iniciar motor de comportamiento adaptativo
+        if (this.adaptiveBehavior) {
+            await this.adaptiveBehavior.start();
+            structuredLogger.success('🤖 AdaptiveBehaviorEngine iniciado');
+        }
 
         // Iniciar FSM con comportamientos autónomos
         this.startFSM();
@@ -2149,6 +2211,7 @@ class GalaBot {
         this.pvp?.stop();
         this.collectBlock?.stop();
         this.pathfinder?.stop();
+        this.adaptiveBehavior?.stop();
 
         // 🧠 ML: Guardar progreso de aprendizaje
         if (this.mlLearner) {

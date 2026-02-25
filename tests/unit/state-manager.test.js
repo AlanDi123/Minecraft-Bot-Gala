@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import StateManager from '../src/utils/state-manager.js';
+import StateManager from '../../src/utils/state-manager.js';
 import fs from 'fs';
 
 describe('StateManager', () => {

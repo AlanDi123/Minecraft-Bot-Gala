@@ -81,7 +81,7 @@ export async function createBot(options = {}) {
  */
 export async function reconnectWithBackoff(createBotFn, options = {}, maxRetries = 10) {
     let attempt = 0;
-    let delay = 1000; // 1 segundo base
+    let delay = 5000; // 5 seconds base
     
     while (attempt < maxRetries) {
         try {
@@ -103,8 +103,8 @@ export async function reconnectWithBackoff(createBotFn, options = {}, maxRetries
             structuredLogger.warn('Reintentando en', { delay: delay / 1000, attempt });
             await new Promise(resolve => setTimeout(resolve, delay));
             
-            // Backoff exponencial con máximo de 5 minutos
-            delay = Math.min(delay * 2, 300000);
+            // Backoff exponencial con máximo de 120 segundos
+            delay = Math.min(delay * 2, 120000);
         }
     }
 }

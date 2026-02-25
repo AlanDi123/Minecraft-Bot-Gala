@@ -224,6 +224,29 @@ export class PathfinderWrapper {
         this.cache.clear();
         structuredLogger.debug('Cache de pathfinding limpiada');
     }
+
+    /**
+     * Actualizar movimientos según contexto
+     * @param {string} context - Contexto ('flee', 'mine', etc.)
+     */
+    updateMovementsForContext(context) {
+        if (!this.movements) return;
+        if (context === 'flee') {
+            this.movements.allowFreeMotion = true;
+            this.movements.maxDropDown = 8;
+        } else if (context === 'mine') {
+            this.movements.canDig = true;
+            this.movements.allowFreeMotion = false;
+            this.movements.maxDropDown = 4;
+        } else {
+            this.movements.allowFreeMotion = true;
+            this.movements.maxDropDown = 4;
+            this.movements.canDig = true;
+        }
+        if (this.bot && this.bot.pathfinder) {
+            this.bot.pathfinder.setMovements(this.movements);
+        }
+    }
 }
 
 export default PathfinderWrapper;

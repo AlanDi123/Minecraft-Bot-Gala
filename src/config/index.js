@@ -29,6 +29,9 @@ export const CONFIG = {
     // CONFIGURACION DE SUPERVIVENCIA
     // =========================================================================
     survival: {
+        fleeHealthThreshold: 8,
+        buildShelterAtNight: true,
+        nightStartTime: 13000,
         healthMin: 14,
         healthCritical: 8,
         healthRegenThreshold: 18,
@@ -160,6 +163,9 @@ export const CONFIG = {
     // CONFIGURACION DE APRENDIZAJE Y PERSISTENCIA
     // =========================================================================
     learning: {
+        episodicMemoryFile: './ml_data/episodic_memory.json',
+        exploredChunksFile: './ml_data/explored_chunks.json',
+        resourceMapFile: './ml_data/resource_map.json',
         knowledgeFile: './gala_knowledge_v6.json',
         stateFile: './gala_state_v6.json',
         metricsFile: './gala_metrics_v6.json',
@@ -260,6 +266,20 @@ export const CONFIG = {
         BUILD: 'BUILD',
         VICTORY: 'VICTORY',
         IDLE: 'IDLE'
+    },
+    // AI planner configuration
+    ai: {
+        plannerTickInterval: 500,
+        scanRadius: 32,
+        explorationRadius: 200,
+        maxConsecutiveFailures: 3,
+        deathRecoveryRadius: 50
+    },
+    
+    // Phase tracking
+    phases: {
+        current: 1,
+        autoAdvance: true
     }
 };
 
