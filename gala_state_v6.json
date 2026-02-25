@@ -23,5 +23,12 @@
     "timestamp": 1771951751521
   },
   "sessionStartTime": 1771806247175,
-  "lastSaveTime": 1771975210641
+  "lastSaveTime": 1771975210641,
+  "exploredChunks": [],
+  "completedGoals": [],
+  "currentPhaseProgress": {"phase1": {}, "phase2": {}, "phase3": {}, "phase4": {}, "phase5": {}},
+  "totalPlaytime": 0,
+  "bestAttempt": null,
+  "lessons": [],
+  "craftingHistory": []
 }

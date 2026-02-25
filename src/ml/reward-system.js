@@ -74,6 +74,40 @@ export class RewardSystem {
             SURVIVE_DAY: 5
         };
         
+        // Extended rewards for full game progression
+        this.extendedRewards = {
+            DEFEAT_ENDER_DRAGON: 10000,
+            ENTER_NETHER: 500,
+            KILL_BLAZE: 100,
+            FIND_STRONGHOLD: 1000,
+            CRAFT_DIAMOND_TOOL: 200,
+            CRAFT_IRON_TOOL: 100,
+            FIRST_IRON_FOUND: 150,
+            FIRST_DIAMOND_FOUND: 300,
+            BUILD_SHELTER_NIGHT: 80,
+            SURVIVED_NIGHT: 50,
+            SURVIVED_CREEPER: 30,
+            PHASE_1_COMPLETED: 500,
+            PHASE_2_COMPLETED: 1000,
+            PHASE_3_COMPLETED: 1500,
+            PHASE_4_COMPLETED: 2000,
+            PHASE_5_COMPLETED: 2500
+        };
+        
+        // Extended penalties
+        this.extendedPenalties = {
+            DEATH: -300,
+            STUCK_LOOP: -50,
+            FELL_IN_LAVA: -400,
+            CREEPER_EXPLOSION_NEAR: -20
+        };
+        
+        // Shaping rewards (progressive)
+        this.shapingRewards = {
+            MINERALS_PER_10: 10,
+            NEW_BIOME: 20
+        };
+
         // Tracking de logros
         this.unlockedAchievements = new Set();
         

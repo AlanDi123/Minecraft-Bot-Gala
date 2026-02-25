@@ -27,7 +27,15 @@ export class StateManager {
             deaths: 0,
             lastDeathLocation: null,
             sessionStartTime: Date.now(),
-            lastSaveTime: Date.now()
+            lastSaveTime: Date.now(),
+            exploredChunks: [],
+            knownResourceLocations: {},
+            completedGoals: [],
+            currentPhaseProgress: { phase1: {}, phase2: {}, phase3: {}, phase4: {}, phase5: {} },
+            totalPlaytime: 0,
+            bestAttempt: null,
+            lessons: [],
+            craftingHistory: []
         };
         
         this.saveTimer = null;
