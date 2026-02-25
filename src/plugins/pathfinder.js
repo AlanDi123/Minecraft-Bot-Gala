@@ -88,22 +88,26 @@ export class PathfinderWrapper {
                 reject(new Error(`Timeout: No se pudo llegar a ${x}, ${y}, ${z}`));
             }, timeout);
             
-            this.bot.pathfinder.setGoal(goal)
-                .then(result => {
-                    clearTimeout(timeoutId);
-                    this.stats.pathsCalculated++;
-                    structuredLogger.debug('Navegación completada', { 
-                        status: result.status,
-                        timeMs: result.timeMs 
-                    });
-                    resolve(result);
-                })
-                .catch(error => {
-                    clearTimeout(timeoutId);
-                    this.stats.goalsFailed++;
-                    structuredLogger.error('Error de navegación', { error: error.message });
-                    reject(error);
-                });
+            const onGoalReached = () => {
+                clearTimeout(timeoutId);
+                this.bot.removeListener('goal_failed', onGoalFailed);
+                this.stats.pathsCalculated++;
+                structuredLogger.debug('Navegación completada', { x, y, z });
+                resolve({ status: 'success' });
+            };
+            
+            const onGoalFailed = (err) => {
+                clearTimeout(timeoutId);
+                this.bot.removeListener('goal_reached', onGoalReached);
+                this.stats.goalsFailed++;
+                structuredLogger.error('Error de navegación', { error: err?.message || err });
+                reject(new Error(err?.message || 'Goal failed'));
+            };
+            
+            this.bot.once('goal_reached', onGoalReached);
+            this.bot.once('goal_failed', onGoalFailed);
+            
+            this.bot.pathfinder.setGoal(goal);
         });
     }
     

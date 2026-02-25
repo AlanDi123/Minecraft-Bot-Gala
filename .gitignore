@@ -8,6 +8,12 @@ gala_knowledge_v6.json
 # Dependencias
 node_modules/
 
+# Cobertura de tests
+coverage/
+
+# Logs
+*.log
+
 # IDE
 .vscode/
 .idea/

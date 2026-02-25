@@ -1,7 +1,7 @@
 # GALA AI V6.1 - Dockerfile
 # Bot autónomo de Minecraft
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Metadata
 LABEL maintainer="Gala AI Development Team"
